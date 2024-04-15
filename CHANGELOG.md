@@ -1,3 +1,7 @@
+## 0.0.13
+
+* Update Preview Image
+
 ## 0.0.12
 
 * new attributes added 

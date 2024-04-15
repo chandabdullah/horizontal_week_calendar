@@ -72,7 +72,7 @@ class _HorizontalWeekCalendarPackageState
                 },
                 borderRadius: BorderRadius.circular(5),
                 showNavigationButtons: true,
-                monthFormat: "MMMM",
+                monthFormat: "MMMM yyyy",
               ),
               Expanded(
                 child: Column(
