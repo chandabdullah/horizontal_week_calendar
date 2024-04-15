@@ -29,5 +29,4 @@ HorizontalWeekCalendar(
 
 ## Preview
 
-![Horizontal Week Calendar](https://raw.githubusercontent.com/chandabdullah/horizontal_week_calendar/main/assets/android.png)
-
+<img src="https://raw.githubusercontent.com/chandabdullah/horizontal_week_calendar/main/assets/android.png" alt="drawing" height="500"/>
