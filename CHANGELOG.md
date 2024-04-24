@@ -1,6 +1,10 @@
 ## 0.0.14
 
 * Added Next Weeks
+* Added new attributes
+    - minDate
+    - maxDate
+    - initialDate
 
 ## 0.0.13
 
@@ -10,9 +14,9 @@
 
 * Added new attributes
 
-    * borderRadius
-    * showNavigationButtons
-    * monthFormat
+    - borderRadius
+    - showNavigationButtons
+    - monthFormat
 
 ## 0.0.10
 
