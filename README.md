@@ -30,3 +30,8 @@ HorizontalWeekCalendar(
 ## Preview
 
 <img src="https://raw.githubusercontent.com/chandabdullah/horizontal_week_calendar/main/assets/android.png" alt="drawing" height="500"/>
+
+
+## Support me
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/chandabdullah21)

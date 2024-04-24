@@ -73,6 +73,10 @@ class _HorizontalWeekCalendarPackageState
                 borderRadius: BorderRadius.circular(5),
                 showNavigationButtons: true,
                 monthFormat: "MMMM yyyy",
+                minDate: DateTime(2024, 1, 1),
+                maxDate: DateTime(2024, 1, 31),
+                initialDate: DateTime(2024, 1, 15),
+                // initialDate: DateTime(2024, 4, 6),
               ),
               Expanded(
                 child: Column(

@@ -1,10 +1,14 @@
+## 0.0.14
+
+* Added Next Weeks
+
 ## 0.0.13
 
 * Update Preview Image
 
 ## 0.0.12
 
-* new attributes added 
+* Added new attributes
 
     * borderRadius
     * showNavigationButtons
