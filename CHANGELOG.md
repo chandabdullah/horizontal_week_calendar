@@ -1,3 +1,6 @@
+## 0.0.15
+* Some bug fixings and improvements
+
 ## 0.0.14
 
 * Added Next Weeks

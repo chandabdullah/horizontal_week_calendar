@@ -207,50 +207,77 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
 
     listOfWeeks.add(currentWeek);
 
-    getMorePreviousWeeks();
+    _getMorePreviousWeeks();
 
-    getMoreNextWeeks();
+    _getMoreNextWeeks();
   }
 
-  getMorePreviousWeeks() {
+  _getMorePreviousWeeks() {
     List<DateTime> minus7Days = [];
     DateTime startFrom = listOfWeeks[currentWeekIndex].first;
 
+    bool canAdd = false;
     for (int index = 0; index < 7; index++) {
       DateTime minusDate = startFrom.add(Duration(days: -(index + 1)));
       minus7Days.add(minusDate);
+      if (widget.minDate != null) {
+        if (minusDate.add(const Duration(days: 1)).isAfter(widget.minDate!)) {
+          canAdd = true;
+        }
+      } else {
+        canAdd = true;
+      }
     }
-    listOfWeeks.add(minus7Days.reversed.toList());
+    if (canAdd == true) {
+      listOfWeeks.add(minus7Days.reversed.toList());
+    }
     setState(() {});
   }
 
-  getMoreNextWeeks() {
+  _getMoreNextWeeks() {
     List<DateTime> plus7Days = [];
     // DateTime startFrom = currentWeek.last;
     DateTime startFrom = listOfWeeks[currentWeekIndex].last;
 
+    // bool canAdd = false;
+    // int newCurrentWeekIndex = 1;
     for (int index = 0; index < 7; index++) {
       DateTime addDate = startFrom.add(Duration(days: (index + 1)));
       plus7Days.add(addDate);
+      // if (widget.maxDate != null) {
+      //   if (addDate.isBefore(widget.maxDate!)) {
+      //     canAdd = true;
+      //     newCurrentWeekIndex = 1;
+      //   } else {
+      //     newCurrentWeekIndex = 0;
+      //   }
+      // } else {
+      //   canAdd = true;
+      //   newCurrentWeekIndex = 1;
+      // }
     }
+    // print("canAdd: $canAdd");
+    // print("newCurrentWeekIndex: $newCurrentWeekIndex");
 
+    // if (canAdd == true) {
     listOfWeeks.insert(0, plus7Days);
+    // }
     currentWeekIndex = 1;
     setState(() {});
   }
 
-  onDateSelect(DateTime date) {
+  _onDateSelect(DateTime date) {
     setState(() {
       selectedDate = date;
     });
     widget.onDateChange?.call(selectedDate);
   }
 
-  onBackClick() {
+  _onBackClick() {
     carouselController.nextPage();
   }
 
-  onNextClick() {
+  _onNextClick() {
     carouselController.previousPage();
   }
 
@@ -266,11 +293,11 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
     currentWeek = listOfWeeks[currentWeekIndex];
 
     if (currentWeekIndex + 1 == listOfWeeks.length) {
-      getMorePreviousWeeks();
+      _getMorePreviousWeeks();
     }
 
     if (index == 0) {
-      getMoreNextWeeks();
+      _getMoreNextWeeks();
       carouselController.nextPage();
     }
 
@@ -280,17 +307,17 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
 
   // =================
 
-  bool isReachMinimum(DateTime dateTime) {
+  bool _isReachMinimum(DateTime dateTime) {
     return widget.minDate?.add(const Duration(days: -1)).isBefore(dateTime) ??
         false;
   }
 
-  bool isReachMaximum(DateTime dateTime) {
+  bool _isReachMaximum(DateTime dateTime) {
     return widget.maxDate?.add(const Duration(days: 1)).isAfter(dateTime) ??
         false;
   }
 
-  bool isNextDisabled() {
+  bool _isNextDisabled() {
     DateTime lastDate = listOfWeeks[currentWeekIndex].last;
     if (widget.maxDate != null) {
       String lastDateFormatted = DateFormat('yyyy/MM/dd').format(lastDate);
@@ -352,7 +379,7 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
                           onTap: isBackDisabled()
                               ? null
                               : () {
-                                  onBackClick();
+                                  _onBackClick();
                                 },
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -401,10 +428,10 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
                   ),
                   widget.showNavigationButtons == true
                       ? GestureDetector(
-                          onTap: isNextDisabled()
+                          onTap: _isNextDisabled()
                               ? null
                               : () {
-                                  onNextClick();
+                                  _onNextClick();
                                 },
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -412,7 +439,7 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
                               Text(
                                 "Next",
                                 style: theme.textTheme.bodyLarge!.copyWith(
-                                  color: isNextDisabled()
+                                  color: _isNextDisabled()
                                       ? (widget.inactiveNavigatorColor ??
                                           Colors.grey)
                                       : theme.primaryColor,
@@ -425,7 +452,7 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
                               Icon(
                                 Icons.arrow_forward_ios,
                                 size: 17,
-                                color: isNextDisabled()
+                                color: _isNextDisabled()
                                     ? (widget.inactiveNavigatorColor ??
                                         Colors.grey)
                                     : theme.primaryColor,
@@ -460,13 +487,13 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
                                 return Expanded(
                                   child: GestureDetector(
                                     // onTap: () {
-                                    //   onDateSelect(currentDate);
+                                    //   _onDateSelect(currentDate);
                                     // },
                                     // TODO: disabled
-                                    onTap: isReachMaximum(currentDate) &&
-                                            isReachMinimum(currentDate)
+                                    onTap: _isReachMaximum(currentDate) &&
+                                            _isReachMinimum(currentDate)
                                         ? () {
-                                            onDateSelect(
+                                            _onDateSelect(
                                               listOfWeeks[ind][weekIndex],
                                             );
                                           }
@@ -492,8 +519,8 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
                                                     .format(selectedDate)
                                             ? widget.activeBackgroundColor ??
                                                 theme.primaryColor
-                                            : isReachMaximum(currentDate) &&
-                                                    isReachMinimum(currentDate)
+                                            : _isReachMaximum(currentDate) &&
+                                                    _isReachMinimum(currentDate)
                                                 ? widget.inactiveBackgroundColor ??
                                                     theme.primaryColor
                                                         .withOpacity(.2)
@@ -535,9 +562,9 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
                                                           .format(selectedDate)
                                                   ? widget.activeTextColor ??
                                                       Colors.white
-                                                  : isReachMaximum(
+                                                  : _isReachMaximum(
                                                               currentDate) &&
-                                                          isReachMinimum(
+                                                          _isReachMinimum(
                                                               currentDate)
                                                       ? widget.inactiveTextColor ??
                                                           Colors.white
@@ -578,9 +605,9 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
                                                           .format(selectedDate)
                                                   ? widget.activeTextColor ??
                                                       Colors.white
-                                                  : isReachMaximum(
+                                                  : _isReachMaximum(
                                                               currentDate) &&
-                                                          isReachMinimum(
+                                                          _isReachMinimum(
                                                               currentDate)
                                                       ? widget.inactiveTextColor ??
                                                           Colors.white
