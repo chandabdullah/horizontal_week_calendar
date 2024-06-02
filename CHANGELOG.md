@@ -1,3 +1,6 @@
+## 0.0.16
+* Some bug fixings
+
 ## 0.0.15
 * Some bug fixings and improvements
 
