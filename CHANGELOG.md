@@ -1,3 +1,8 @@
+## 0.0.17
+* Some bug fixings
+* Added new attribute: 
+    - showTopNavbar
+
 ## 0.0.16
 * Some bug fixings
 

@@ -55,7 +55,19 @@ class _HorizontalWeekCalendarPackageState
           child: Column(
             children: [
               HorizontalWeekCalendar(
+                minDate: DateTime(2023, 12, 31),
+                maxDate: DateTime(2024, 1, 31),
+                initialDate: DateTime(2024, 1, 15),
+                onDateChange: (date) {
+                  setState(() {
+                    selectedDate = date;
+                  });
+                },
+                showTopNavbar: false,
+                monthFormat: "MMMM yyyy",
+                showNavigationButtons: true,
                 weekStartFrom: WeekStartFrom.Monday,
+                borderRadius: BorderRadius.circular(7),
                 activeBackgroundColor: Colors.deepPurple,
                 activeTextColor: Colors.white,
                 inactiveBackgroundColor: Colors.deepPurple.withOpacity(.3),
@@ -65,18 +77,6 @@ class _HorizontalWeekCalendarPackageState
                 activeNavigatorColor: Colors.deepPurple,
                 inactiveNavigatorColor: Colors.grey,
                 monthColor: Colors.deepPurple,
-                onDateChange: (date) {
-                  setState(() {
-                    selectedDate = date;
-                  });
-                },
-                borderRadius: BorderRadius.circular(5),
-                showNavigationButtons: true,
-                monthFormat: "MMMM yyyy",
-                minDate: DateTime(2023, 12, 31),
-                maxDate: DateTime(2024, 1, 31),
-                initialDate: DateTime(2024, 1, 15),
-                // initialDate: DateTime(2024, 4, 6),
               ),
               Expanded(
                 child: Column(

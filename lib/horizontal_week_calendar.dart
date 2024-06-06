@@ -134,11 +134,13 @@ class HorizontalWeekCalendar extends StatefulWidget {
   /// Default value will be `MMMM yyyy`
   final String? monthFormat;
 
-  final DateTime? minDate;
+  final DateTime minDate;
 
-  final DateTime? maxDate;
+  final DateTime maxDate;
 
-  final DateTime? initialDate;
+  final DateTime initialDate;
+
+  final bool showTopNavbar;
 
   HorizontalWeekCalendar({
     super.key,
@@ -146,10 +148,10 @@ class HorizontalWeekCalendar extends StatefulWidget {
     this.onWeekChange,
     this.activeBackgroundColor,
     this.inactiveBackgroundColor,
-    this.disabledBackgroundColor,
+    this.disabledBackgroundColor = Colors.grey,
     this.activeTextColor = Colors.white,
-    this.inactiveTextColor,
-    this.disabledTextColor,
+    this.inactiveTextColor = Colors.white,
+    this.disabledTextColor = Colors.white,
     this.activeNavigatorColor,
     this.inactiveNavigatorColor,
     this.monthColor,
@@ -158,13 +160,15 @@ class HorizontalWeekCalendar extends StatefulWidget {
     this.scrollPhysics = const ClampingScrollPhysics(),
     this.showNavigationButtons = true,
     this.monthFormat,
-    this.minDate,
-    this.maxDate,
-    this.initialDate,
-  })  : assert(minDate != null && maxDate != null),
-        assert(minDate!.isBefore(maxDate!)),
-        assert(minDate!.isBefore(initialDate ?? DateTime.now()) &&
-            (initialDate ?? DateTime.now()).isBefore(maxDate!)),
+    required this.minDate,
+    required this.maxDate,
+    required this.initialDate,
+    this.showTopNavbar = true,
+  })  :
+        // assert(minDate != null && maxDate != null),
+        assert(minDate.isBefore(maxDate)),
+        assert(
+            minDate.isBefore(initialDate) && (initialDate).isBefore(maxDate)),
         super();
 
   @override
@@ -192,8 +196,8 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
   DateTime getDate(DateTime d) => DateTime(d.year, d.month, d.day);
 
   initCalender() {
-    final date = widget.initialDate ?? today;
-    selectedDate = widget.initialDate ?? today;
+    final date = widget.initialDate;
+    selectedDate = widget.initialDate;
 
     DateTime startOfCurrentWeek = widget.weekStartFrom == WeekStartFrom.Monday
         ? getDate(date.subtract(Duration(days: date.weekday - 1)))
@@ -220,13 +224,13 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
     for (int index = 0; index < 7; index++) {
       DateTime minusDate = startFrom.add(Duration(days: -(index + 1)));
       minus7Days.add(minusDate);
-      if (widget.minDate != null) {
-        if (minusDate.add(const Duration(days: 1)).isAfter(widget.minDate!)) {
-          canAdd = true;
-        }
-      } else {
+      // if (widget.minDate != null) {
+      if (minusDate.add(const Duration(days: 1)).isAfter(widget.minDate)) {
         canAdd = true;
       }
+      // } else {
+      //   canAdd = true;
+      // }
     }
     if (canAdd == true) {
       listOfWeeks.add(minus7Days.reversed.toList());
@@ -308,26 +312,24 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
   // =================
 
   bool _isReachMinimum(DateTime dateTime) {
-    return widget.minDate?.add(const Duration(days: -1)).isBefore(dateTime) ??
-        false;
+    return widget.minDate.add(const Duration(days: -1)).isBefore(dateTime);
   }
 
   bool _isReachMaximum(DateTime dateTime) {
-    return widget.maxDate?.add(const Duration(days: 1)).isAfter(dateTime) ??
-        false;
+    return widget.maxDate.add(const Duration(days: 1)).isAfter(dateTime);
   }
 
   bool _isNextDisabled() {
     DateTime lastDate = listOfWeeks[currentWeekIndex].last;
-    if (widget.maxDate != null) {
-      String lastDateFormatted = DateFormat('yyyy/MM/dd').format(lastDate);
-      String maxDateFormatted =
-          DateFormat('yyyy/MM/dd').format(widget.maxDate!);
-      if (lastDateFormatted == maxDateFormatted) return true;
-    }
+    // if (widget.maxDate != null) {
+    String lastDateFormatted = DateFormat('yyyy/MM/dd').format(lastDate);
+    String maxDateFormatted = DateFormat('yyyy/MM/dd').format(widget.maxDate);
+    if (lastDateFormatted == maxDateFormatted) return true;
+    // }
 
     bool isAfter =
-        widget.maxDate == null ? false : lastDate.isAfter(widget.maxDate!);
+        // widget.maxDate == null ? false :
+        lastDate.isAfter(widget.maxDate);
 
     return isAfter;
     // return listOfWeeks[currentWeekIndex].last.isBefore(DateTime.now());
@@ -335,15 +337,15 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
 
   bool isBackDisabled() {
     DateTime firstDate = listOfWeeks[currentWeekIndex].first;
-    if (widget.minDate != null) {
-      String firstDateFormatted = DateFormat('yyyy/MM/dd').format(firstDate);
-      String minDateFormatted =
-          DateFormat('yyyy/MM/dd').format(widget.minDate!);
-      if (firstDateFormatted == minDateFormatted) return true;
-    }
+    // if (widget.minDate != null) {
+    String firstDateFormatted = DateFormat('yyyy/MM/dd').format(firstDate);
+    String minDateFormatted = DateFormat('yyyy/MM/dd').format(widget.minDate);
+    if (firstDateFormatted == minDateFormatted) return true;
+    // }
 
     bool isBefore =
-        widget.minDate == null ? false : firstDate.isBefore(widget.minDate!);
+        // widget.minDate == null ? false :
+        firstDate.isBefore(widget.minDate);
 
     return isBefore;
     // return listOfWeeks[currentWeekIndex].last.isBefore(DateTime.now());
@@ -370,102 +372,101 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
         ? const SizedBox()
         : Column(
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  widget.showNavigationButtons == true
-                      ? GestureDetector(
-                          onTap: isBackDisabled()
-                              ? null
-                              : () {
-                                  _onBackClick();
-                                },
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.arrow_back_ios_new,
-                                size: 17,
-                                color: isBackDisabled()
-                                    ? (widget.inactiveNavigatorColor ??
-                                        Colors.grey)
-                                    : theme.primaryColor,
-                              ),
-                              const SizedBox(
-                                width: 4,
-                              ),
-                              Text(
-                                "Back",
-                                style: theme.textTheme.bodyLarge!.copyWith(
+              if (widget.showTopNavbar)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    widget.showNavigationButtons == true
+                        ? GestureDetector(
+                            onTap: isBackDisabled()
+                                ? null
+                                : () {
+                                    _onBackClick();
+                                  },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.arrow_back_ios_new,
+                                  size: 17,
                                   color: isBackDisabled()
                                       ? (widget.inactiveNavigatorColor ??
                                           Colors.grey)
                                       : theme.primaryColor,
-                                  fontWeight: FontWeight.bold,
                                 ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : const SizedBox(),
-                  Text(
-                    widget.monthFormat?.isEmpty ?? true
-                        ? (isCurrentYear()
-                            ? DateFormat('MMMM').format(
-                                currentWeek.first,
-                              )
-                            : DateFormat('MMMM yyyy').format(
-                                currentWeek.first,
-                              ))
-                        : DateFormat(widget.monthFormat).format(
-                            currentWeek.first,
-                          ),
-                    style: theme.textTheme.titleMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: widget.monthColor ?? theme.primaryColor,
+                                const SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
+                                  "Back",
+                                  style: theme.textTheme.bodyLarge!.copyWith(
+                                    color: isBackDisabled()
+                                        ? (widget.inactiveNavigatorColor ??
+                                            Colors.grey)
+                                        : theme.primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : const SizedBox(),
+                    Text(
+                      widget.monthFormat?.isEmpty ?? true
+                          ? (isCurrentYear()
+                              ? DateFormat('MMMM').format(
+                                  currentWeek.first,
+                                )
+                              : DateFormat('MMMM yyyy').format(
+                                  currentWeek.first,
+                                ))
+                          : DateFormat(widget.monthFormat).format(
+                              currentWeek.first,
+                            ),
+                      style: theme.textTheme.titleMedium!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: widget.monthColor ?? theme.primaryColor,
+                      ),
                     ),
-                  ),
-                  widget.showNavigationButtons == true
-                      ? GestureDetector(
-                          onTap: _isNextDisabled()
-                              ? null
-                              : () {
-                                  _onNextClick();
-                                },
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Next",
-                                style: theme.textTheme.bodyLarge!.copyWith(
+                    widget.showNavigationButtons == true
+                        ? GestureDetector(
+                            onTap: _isNextDisabled()
+                                ? null
+                                : () {
+                                    _onNextClick();
+                                  },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Next",
+                                  style: theme.textTheme.bodyLarge!.copyWith(
+                                    color: _isNextDisabled()
+                                        ? (widget.inactiveNavigatorColor ??
+                                            Colors.grey)
+                                        : theme.primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 4,
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 17,
                                   color: _isNextDisabled()
                                       ? (widget.inactiveNavigatorColor ??
                                           Colors.grey)
                                       : theme.primaryColor,
-                                  fontWeight: FontWeight.bold,
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 4,
-                              ),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                size: 17,
-                                color: _isNextDisabled()
-                                    ? (widget.inactiveNavigatorColor ??
-                                        Colors.grey)
-                                    : theme.primaryColor,
-                              ),
-                            ],
-                          ),
-                        )
-                      : const SizedBox(),
-                ],
-              ),
-              const SizedBox(
-                height: 12,
-              ),
+                              ],
+                            ),
+                          )
+                        : const SizedBox(),
+                  ],
+                ),
+              if (widget.showTopNavbar) const SizedBox(height: 12),
               CarouselSlider(
                 carouselController: carouselController,
                 items: [
