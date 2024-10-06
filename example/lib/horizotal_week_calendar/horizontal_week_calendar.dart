@@ -1,6 +1,6 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider_plus/carousel_slider_plus.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:intl/intl.dart';
-import 'package:flutter/material.dart';
 
 enum WeekStartFrom {
   Sunday,
@@ -176,7 +176,7 @@ class HorizontalWeekCalendar extends StatefulWidget {
 }
 
 class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
-  CarouselController carouselController = CarouselController();
+  CarouselSliderController carouselController = CarouselSliderController();
 
   final int _initialPage = 1;
 
@@ -468,7 +468,8 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
                 ),
               if (widget.showTopNavbar) const SizedBox(height: 12),
               CarouselSlider(
-                carouselController: carouselController,
+                // carouselController: carouselController,
+                controller: carouselController,
                 items: [
                   if (listOfWeeks.isNotEmpty)
                     for (int ind = 0; ind < listOfWeeks.length; ind++)
