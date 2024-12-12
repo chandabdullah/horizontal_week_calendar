@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:intl/intl.dart';
@@ -142,11 +144,24 @@ class HorizontalWeekCalendar extends StatefulWidget {
 
   final bool showTopNavbar;
 
+  HorizontalWeekCalenderController? controller;
+
+  ///controll the date jump
+  ///
+  /// ```dart
+  /// jumpPre()
+  /// Jump scoll calender to left
+  ///
+  /// jumpNext()
+  /// Jump calender to right date
+  /// ```
+
   HorizontalWeekCalendar({
     super.key,
     this.onDateChange,
     this.onWeekChange,
     this.activeBackgroundColor,
+    this.controller,
     this.inactiveBackgroundColor,
     this.disabledBackgroundColor = Colors.grey,
     this.activeTextColor = Colors.white,
@@ -214,6 +229,18 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
     _getMorePreviousWeeks();
 
     _getMoreNextWeeks();
+
+    if (widget.controller != null) {
+      widget.controller!._stateChangerPre.addListener(() {
+        print("previous");
+        _onBackClick();
+      });
+
+      widget.controller!._stateChangerNex.addListener(() {
+        print("next");
+        _onNextClick();
+      });
+    }
   }
 
   _getMorePreviousWeeks() {
@@ -643,5 +670,18 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
               ),
             ],
           );
+  }
+}
+
+class HorizontalWeekCalenderController {
+  final ValueNotifier<int> _stateChangerPre = ValueNotifier<int>(0);
+  final ValueNotifier<int> _stateChangerNex = ValueNotifier<int>(0);
+
+  void jumpPre() {
+    _stateChangerPre.value = _stateChangerPre.value + 1;
+  }
+
+  void jumpNext() {
+    _stateChangerNex.value = _stateChangerNex.value + 1;
   }
 }
