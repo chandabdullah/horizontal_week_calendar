@@ -77,6 +77,8 @@ class _HorizontalWeekCalendarPackageState
                 activeNavigatorColor: Colors.deepPurple,
                 inactiveNavigatorColor: Colors.grey,
                 monthColor: Colors.deepPurple,
+                onWeekChange: (List<DateTime> dates) {},
+                scrollPhysics: const BouncingScrollPhysics(),
               ),
               Expanded(
                 child: Column(

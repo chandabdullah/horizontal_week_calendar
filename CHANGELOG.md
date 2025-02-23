@@ -1,3 +1,11 @@
+## 0.0.20
+* Update README.md
+
+## 0.0.19
+* Add attributes in Example
+    - onWeekChange
+    - scrollPhysics
+
 ## 0.0.18
 * Update packages
 

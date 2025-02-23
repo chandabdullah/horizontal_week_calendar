@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:intl/intl.dart';
@@ -144,7 +142,7 @@ class HorizontalWeekCalendar extends StatefulWidget {
 
   final bool showTopNavbar;
 
-  HorizontalWeekCalenderController? controller;
+  final HorizontalWeekCalenderController? controller;
 
   ///controll the date jump
   ///

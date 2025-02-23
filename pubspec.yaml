@@ -1,6 +1,6 @@
 name: horizontal_week_calendar
 description: A horizontal week calender with on change week and on date selected function
-version: 0.0.18
+version: 0.0.20
 homepage: https://github.com/chandabdullah/horizontal_week_calendar
 
 environment:
